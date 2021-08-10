@@ -1,0 +1,123 @@
+{
+    "abi":[
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "code",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "bytes",
+                    "name": "dataHash",
+                    "type": "bytes"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "saverAddress",
+                    "type": "address"
+                }
+            ],
+            "name": "GetEvidence",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "code",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "bytes",
+                    "name": "dataHash",
+                    "type": "bytes"
+                }
+            ],
+            "name": "SaveEvidence",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "address[]",
+                    "name": "users",
+                    "type": "address[]"
+                }
+            ],
+            "name": "UserList",
+            "type": "event"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "internalType": "bytes",
+                    "name": "dataHash",
+                    "type": "bytes"
+                }
+            ],
+            "name": "getEvidence",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "code",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "address",
+                    "name": "saverAddress",
+                    "type": "address"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [],
+            "name": "getUsers",
+            "outputs": [
+                {
+                    "internalType": "address[]",
+                    "name": "users",
+                    "type": "address[]"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "internalType": "bytes",
+                    "name": "dataHash",
+                    "type": "bytes"
+                }
+            ],
+            "name": "saveEvidence",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "code",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }
+    ]
+}
