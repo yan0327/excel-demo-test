@@ -24,6 +24,8 @@
 import HelloWorld from '@/components/HelloWorld.vue'
 import Web3 from "web3";
 import Tx from "ethereumjs-tx";
+import EthereumTx from "ethereumjs-tx";
+
 
 import HDWalletProvider from "@truffle/hdwallet-provider";
 //import VueMetamask from 'vue-metamask'
@@ -107,9 +109,83 @@ export default {
 },
 async mounted() {
     if (window.ethereum) {
-      window.web3 = new Web3(ethereum);
-      //window.web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.infura.io/v3/e6b151ba42004b5ebce395b52fa4de91"));
+      //window.web3 = new Web3(ethereum);
+      web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.infura.io/v3/e6b151ba42004b5ebce395b52fa4de91"));
       //window.web3 = new Web3("https://kovan.infura.io/v3/e6b151ba42004b5ebce395b52fa4de91");
+      /*
+      var _from = "0xf84B519A79d308b3DCdD4f0Ae4ac12C7CDda4233";
+      var privateKey1 = Buffer.from('257b0cdc788702dda2221b06358d20bb7ab30256b7e1e3356c1bf0027bd091e4','hex');//process.env.PRIVATE_KEY_1
+      web3.eth.getTransactionCount(_from,(err,txcount)=>{
+        var txObject ={
+        nonce: web3.utils.toHex(txcount),
+        gasPrice: web3.utils.toHex(web3.utils.toWei('10','gwei')),
+        gasLimit: web3.utils.toHex(21000),
+        to: '0xf84B519A79d308b3DCdD4f0Ae4ac12C7CDda4233',
+        value:web3.utils.toHex(web3.utils.toWei('0.0001','ether')),
+}
+      var tx = new Tx(txObject);
+      tx.sign(privateKey1);
+      var serializedTx = tx.serialize();
+      web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), function(err, hash) {
+          if (!err){
+              console.log(hash);
+          }else{
+              console.log(err);
+          }
+      })
+});*/
+
+//智能合约地址
+const registryAddress = "0xc10e4ed0258b6229e58cf90ae470c2df6f07043b"
+//智能合约对应Abi文件
+var contractAbi = require("./contract_abi.json");
+//私钥转换为Buffer
+const privateKey =  Buffer.from('257b0cdc788702dda2221b06358d20bb7ab30256b7e1e3356c1bf0027bd091e4',"hex")//推荐使用cmd set命令然后env.process导出来
+//私钥转换为账号                
+const account = web3.eth.accounts.privateKeyToAccount("0x"+"257b0cdc788702dda2221b06358d20bb7ab30256b7e1e3356c1bf0027bd091e4");
+//私钥对应的账号地地址
+const address = account.address
+console.log("address: ",address)
+
+//获取合约实例
+var myContract = new web3.eth.Contract(contractAbi.abi,registryAddress)
+
+myContract.methods.value().call().then((value)=>{
+        console.log(value);
+        this.value = value;
+      })
+
+
+//获取nonce,使用本地私钥发送交易
+/*
+web3.eth.getTransactionCount(address).then(
+    nonce => {
+        console.log("nonce: ",nonce)
+        const txParams = {
+            nonce: nonce,
+            gasPrice: web3.utils.toHex(web3.utils.toWei('10','gwei')),
+            gasLimit: web3.utils.toHex(210000),
+            to: registryAddress,
+            data: myContract.methods.increase(1).encodeABI(), //ERC20转账
+           
+          }
+          const tx = new EthereumTx(txParams)
+        tx.sign(privateKey)
+        const serializedTx = tx.serialize()
+        web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
+    .on('transactionHash',(transactionHash)=>{
+     console.log('transactionHash', transactionHash)
+   })
+   .on('receipt',(receipt)=>{
+     console.log({ receipt:receipt })
+   })
+   .on('error',(error, receipt)=>{
+     console.log({ error:error, receipt:receipt})
+   })
+          
+    },
+    e => console.log(e)
+)*/
       try {
         const accounts = await ethereum.enable();
         console.log(accounts);
