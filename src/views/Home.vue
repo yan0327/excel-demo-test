@@ -23,7 +23,9 @@
 
 import HelloWorld from '@/components/HelloWorld.vue'
 import Web3 from "web3";
-import EthereumTx from "ethereumjs-tx";
+import Tx from "ethereumjs-tx";
+
+import HDWalletProvider from "@truffle/hdwallet-provider";
 //import VueMetamask from 'vue-metamask'
 export default {
   name: 'home',
@@ -106,19 +108,18 @@ export default {
 async mounted() {
     if (window.ethereum) {
       window.web3 = new Web3(ethereum);
-      //window.web3 = new Web3(new Web3.providers.WebsocketProvider("wss://kovan.infura.io/ws/v3/e6b151ba42004b5ebce395b52fa4de91"));
-      console.log(window.web3)
+      //window.web3 = new Web3(new Web3.providers.HttpProvider("https://kovan.infura.io/v3/e6b151ba42004b5ebce395b52fa4de91"));
+      //window.web3 = new Web3("https://kovan.infura.io/v3/e6b151ba42004b5ebce395b52fa4de91");
       try {
-        //const accounts = await ethereum.enable();
-        //console.log(accounts);
-        //const provider = window['ethereum']
-        //console.log(provider)
-        //console.log(provider.chainId)
+        const accounts = await ethereum.enable();
+        console.log(accounts);
+        const provider = window['ethereum']
+        console.log(provider)
+        console.log(provider.chainId)
         //this.web3TimerCheck(window.web3);
-        //const web3 = new Web3(provider)
-        //console.log(web3)
-        console.log("Why")
-        
+        const web3 = new Web3(provider)
+        console.log(web3)
+/******************** */
         const abi = require("./contract_abi.json");
         const address = "0xc10e4ed0258b6229e58cf90ae470c2df6f07043b"
         const privateKey =  Buffer.from('257b0cdc788702dda2221b06358d20bb7ab30256b7e1e3356c1bf0027bd091e4',"hex")
@@ -128,57 +129,13 @@ async mounted() {
         console.log("address: ",keyaddress)
         window.myContract = new web3.eth.Contract(abi.abi, address)
         console.log(window.myContract)
-
-        //window.defaultAccount = accounts[0].toLowerCase()
+/******************** */
+        window.defaultAccount = accounts[0].toLowerCase()
         console.log(window.defaultAccount)
         const abi2 = require("./contract_abi2.json")
         const address2 = "0xb1d17b075d13ee1ec7a686d692809182ac9f19f0"
         window.myContract2 = new web3.eth.Contract(abi2.abi, address2)
         console.log(window.myContract2)
-
-        window.web3.eth.getTransactionCount(keyaddress).then(
-      nonce =>{
-        console.log("nonce: ",nonce)
-        const txParams = {
-            nonce: nonce,
-            gasLimit: '0x271000',
-            to: address,
-            data: window.myContract.methods.increase(1).encodeABI(), //ERC20转账
-          }
-          const tx = new EthereumTx(txParams)
-        tx.sign(privateKey)
-        const serializedTx = tx.serialize()
-        window.web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
-        .on('receipt', console.log);
-                  
-            },
-            e => console.log(e)
-        )
-        /*
-        web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
-        .on('transactionHash',(transationHash)=>{
-          console.log('transactionHash', transationHash)
-        })
-        .on('receipt',(receipt)=>{
-        console.log({ receipt:receipt })
-        })
-        .on('error',(error, receipt)=>{
-        console.log({ error:error, receipt:receipt})
-        });*/
-
-        
-        
-        /*.on('transactionHash',(transationHash)=>{
-          console.log('transactionHash', transationHash)
-        })
-        .on('receipt',(receipt)=>{
-        console.log({ receipt:receipt })
-        })
-        .on('error',(error, receipt)=>{
-        console.log({ error:error, receipt:receipt})
-        }); */    
-
-
       } catch (error) {
         /*
         this.Log(
@@ -200,10 +157,3 @@ async mounted() {
   },
 };
 </script>
-      <el-button id="getEvidence" type="primary"  class="clearfix" @click="getEvidence"> getEvidence</el-button>
-      <el-button id="getUsers" type="primary"  class="clearfix" @click="getUsers">getUsers</el-button>
-      <el-button id="saveEvidence" type="primary"  class="clearfix" @click="saveEvidence">saveEvidence</el-button>
-  //  <vue-metamask userMessage="msg" @onComplete="onComplete">  </vue-metamask>
-  .on('confirmation',(confirmationNumber, receipt)=>{
-     console.log({ confirmationNumber: confirmationNumber, receipt: receipt})
-   })
